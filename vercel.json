@@ -18,6 +18,10 @@
       "dest": "/Backend/$1"
     },
     {
+      "src": "/",
+      "dest": "/Frontend/index.html"
+    },
+    {
       "src": "/(.*)",
       "dest": "/Frontend/$1"
     }
