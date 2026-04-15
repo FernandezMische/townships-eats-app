@@ -19,11 +19,11 @@
     },
     {
       "src": "/",
-      "dest": "/Frontend/index.html"
+      "dest": "/Frontend/dist/index.html"
     },
     {
       "src": "/(.*)",
-      "dest": "/Frontend/$1"
+      "dest": "/Frontend/dist/$1"
     }
   ]
 }
