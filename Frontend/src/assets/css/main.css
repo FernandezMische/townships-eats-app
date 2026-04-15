@@ -1,0 +1,87 @@
+/* Frontend/src/assets/css/main.css */
+
+/* Kasi Eats - Color Palette */
+:root {
+  --color-primary-orange: #ff7f00; /* Main brand orange */
+  --color-secondary-green: #28a745; /* A complementary green for accents */
+  --color-text-dark: #333;       /* Dark text for readability */
+  --color-text-light: #fff;       /* Light text, e.g., on dark backgrounds */
+  --color-grey-text: #666;       /* Lighter grey for secondary text */
+  --color-background-light: #f4f7f6; /* Light background for pages */
+  --color-border-light: #eee;     /* Light border color */
+}
+
+/* Basic Resets & Global Styles */
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* A more modern sans-serif font */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-background-light);
+  color: var(--color-text-dark);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-text-dark);
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+p {
+  line-height: 1.6;
+  margin-bottom: 1em;
+}
+
+a {
+  color: var(--color-primary-orange);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Utility Classes */
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mt-20 { margin-top: 20px; }
+.mb-20 { margin-bottom: 20px; }
+.p-20 { padding: 20px; }
+
+/* Basic button style - Kasi Eats feel */
+button {
+  background-color: var(--color-primary-orange);
+  color: var(--color-text-light);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: darken(var(--color-primary-orange), 10%); /* This won't work directly in CSS, but for conceptual understanding */
+  /* For actual darkening, you'd use a specific shade or a CSS filter */
+  filter: brightness(90%); /* A simple way to achieve a slight darkening */
+}
+
+/* Card-like styling for pages/components */
+.page-card {
+  background-color: var(--color-text-light);
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  margin: 20px auto; /* Centering with some vertical margin */
+  max-width: 500px; /* Default max-width for forms, adjust per component */
+}
