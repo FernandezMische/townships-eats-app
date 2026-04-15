@@ -8,14 +8,14 @@
       }
     },
     {
-      "src": "Backend/**",
+      "src": "Backend/index.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/Backend/$1"
+      "dest": "/Backend/index.js"
     },
     {
       "src": "/",
