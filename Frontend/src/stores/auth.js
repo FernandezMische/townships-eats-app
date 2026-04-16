@@ -1,8 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
-import { API_URL } from '/src/config.js';
-
+import { API_URL } from '../config.js';
 export const useAuthStore = defineStore('auth', () => {
   // State
   const user = ref(JSON.parse(localStorage.getItem('user')) || null)
