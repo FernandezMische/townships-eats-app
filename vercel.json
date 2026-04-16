@@ -1,26 +1,21 @@
 {
   "buildCommand": "cd Frontend && npm install && npm run build",
   "outputDirectory": "Frontend/dist",
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        }
+      ]
+    }
+  ],
   "routes": [
     {
-      "src": "/assets/(.*)\\.css",
-      "headers": { "Content-Type": "text/css" },
-      "dest": "/Frontend/dist/assets/$1.css"
-    },
-    {
-      "src": "/assets/(.*)\\.js",
-      "headers": { "Content-Type": "application/javascript" },
-      "dest": "/Frontend/dist/assets/$1.js"
-    },
-    {
-      "src": "/(.*)\\.css",
-      "headers": { "Content-Type": "text/css" },
-      "dest": "/Frontend/dist/$1.css"
-    },
-    {
-      "src": "/(.*)\\.js",
-      "headers": { "Content-Type": "application/javascript" },
-      "dest": "/Frontend/dist/$1.js"
+      "src": "/(.*\\.(css|js|ico|png|jpg|svg))",
+      "dest": "/Frontend/dist/$1"
     },
     {
       "src": "/(.*)",
