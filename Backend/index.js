@@ -38,7 +38,7 @@ app.get("/", (req, res) => {
 });
 
 const PORT = process.env.PORT || 5401;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on http://localhost:${PORT}`);
   console.log(`PayFast Sandbox: ${process.env.PAYFAST_SANDBOX === 'true' ? 'YES' : 'NO'}`);
 });
