@@ -1,22 +1,14 @@
 {
-  "buildCommand": "cd Frontend && npm install && npm run build",
-  "outputDirectory": "Frontend/dist",
-  "headers": [
+  "builds": [
     {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-cache, no-store, must-revalidate"
-        }
-      ]
+      "src": "Frontend/**",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
     }
   ],
   "routes": [
-    {
-      "src": "/(.*\\.(css|js|ico|png|jpg|svg))",
-      "dest": "/Frontend/dist/$1"
-    },
     {
       "src": "/(.*)",
       "dest": "/Frontend/dist/index.html"
