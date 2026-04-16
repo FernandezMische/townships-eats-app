@@ -1,7 +1,10 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
-import { API_URL } from '../config.js';
+
+// HARDCODED URL - CHANGE THIS TO YOUR RENDER BACKEND URL
+const API_URL = 'https://townships-eats-app.onrender.com/api';
+
 export const useAuthStore = defineStore('auth', () => {
   // State
   const user = ref(JSON.parse(localStorage.getItem('user')) || null)
