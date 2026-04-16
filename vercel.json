@@ -3,19 +3,24 @@
   "outputDirectory": "Frontend/dist",
   "routes": [
     {
-      "src": "/assets/(.*)",
-      "headers": { "Content-Type": "application/javascript" },
-      "dest": "/Frontend/dist/assets/$1"
+      "src": "/assets/(.*)\\.css",
+      "headers": { "Content-Type": "text/css" },
+      "dest": "/Frontend/dist/assets/$1.css"
     },
     {
-      "src": "/(.*)\\.js",
+      "src": "/assets/(.*)\\.js",
       "headers": { "Content-Type": "application/javascript" },
-      "dest": "/Frontend/dist/$1.js"
+      "dest": "/Frontend/dist/assets/$1.js"
     },
     {
       "src": "/(.*)\\.css",
       "headers": { "Content-Type": "text/css" },
       "dest": "/Frontend/dist/$1.css"
+    },
+    {
+      "src": "/(.*)\\.js",
+      "headers": { "Content-Type": "application/javascript" },
+      "dest": "/Frontend/dist/$1.js"
     },
     {
       "src": "/(.*)",
