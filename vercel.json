@@ -1,29 +1,10 @@
 {
-  "builds": [
-    {
-      "src": "Frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    },
-    {
-      "src": "Backend/index.js",
-      "use": "@vercel/node"
-    }
-  ],
+  "buildCommand": "cd Frontend && npm install && npm run build",
+  "outputDirectory": "Frontend/dist",
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "/Backend/index.js"
-    },
-    {
-      "src": "/",
-      "dest": "/Frontend/index.html"
-    },
-    {
       "src": "/(.*)",
-      "dest": "/Frontend/$1"
+      "dest": "/index.html"
     }
   ]
 }
