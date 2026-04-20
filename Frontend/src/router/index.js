@@ -54,6 +54,17 @@ path: '/payment',
 name: 'Payment',
 component: payment,
     },
+    // Add these to your routes array
+{
+  path: '/payment/success',
+  name: 'PaymentSuccess',
+  component: () => import('@/views/PaymentSuccess.vue')
+},
+{
+  path: '/payment/cancel',
+  name: 'PaymentCancel', 
+  component: () => import('@/views/PaymentCancel.vue')
+}
     {
       path: '/customer',
       redirect: '/customer/home',
