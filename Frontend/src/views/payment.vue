@@ -2,50 +2,74 @@
   <div class="payment-container">
     <h1>Checkout</h1>
     
-    <div v-if="loading" class="text-center">
-      <p>Loading your cart...</p>
+    <!-- Success/Cancel Messages -->
+    <div v-if="paymentStatus === 'success'" class="success-page">
+      <div class="success-card">
+        <div class="success-icon">✅</div>
+        <h2>Payment Successful!</h2>
+        <p>Your order #{{ orderId }} has been confirmed.</p>
+        <p>Redirecting to home in {{ countdown }} seconds...</p>
+        <router-link to="/customer/home" class="btn-primary">Click here if not redirected</router-link>
+      </div>
     </div>
     
+    <div v-else-if="paymentStatus === 'cancel'" class="cancel-page">
+      <div class="cancel-card">
+        <div class="cancel-icon">❌</div>
+        <h2>Payment Cancelled</h2>
+        <p>Your payment was cancelled. No charges were made.</p>
+        <p>Redirecting to cart in {{ countdown }} seconds...</p>
+        <router-link to="/cart" class="btn-primary">Return to Cart</router-link>
+      </div>
+    </div>
+    
+    <!-- Normal Checkout Flow -->
     <div v-else>
-      <div class="order-summary">
-        <h3>Order Summary</h3>
-        <div v-if="!cart.items || cart.items.length === 0" class="text-center">
-          <p>Your cart is empty. <RouterLink to="/customer/home">Go back shopping</RouterLink></p>
-        </div>
-        <div v-else>
-          <div v-for="item in cart.items" :key="item.id" class="summary-item">
-            <span>{{ item.name }} x{{ item.quantity }}</span>
-            <span>R{{ (Number(item.unit_price) * Number(item.quantity)).toFixed(2) }}</span>
-          </div>
-          <div class="address-section">
-            <label for="deliveryAddress"><strong>Delivery Address</strong></label>
-            <textarea
-              id="deliveryAddress"
-              v-model.trim="deliveryAddress"
-              rows="3"
-              placeholder="Enter your delivery address"
-            ></textarea>
-          </div>
-          <div class="summary-line">
-            <span>Subtotal:</span>
-            <span>R{{ Number(cart.subtotal || 0).toFixed(2) }}</span>
-          </div>
-          <div class="summary-line">
-            <span>Delivery Fee:</span>
-            <span>R{{ Number(cart.delivery_fee || 25.00).toFixed(2) }}</span>
-          </div>
-          <div class="summary-total">
-            <strong>Total: R{{ calculateTotal().toFixed(2) }}</strong>
-          </div>
-        </div>
+      <div v-if="loading" class="text-center">
+        <p>Loading your cart...</p>
       </div>
       
-      <div v-if="success" class="success">{{ success }}</div>
-      <div v-if="error" class="error">{{ error }}</div>
+      <div v-else>
+        <div class="order-summary">
+          <h3>Order Summary</h3>
+          <div v-if="!cart.items || cart.items.length === 0" class="text-center">
+            <p>Your cart is empty. <RouterLink to="/customer/home">Go back shopping</RouterLink></p>
+          </div>
+          <div v-else>
+            <div v-for="item in cart.items" :key="item.id" class="summary-item">
+              <span>{{ item.name }} x{{ item.quantity }}</span>
+              <span>R{{ (Number(item.unit_price) * Number(item.quantity)).toFixed(2) }}</span>
+            </div>
+            <div class="address-section">
+              <label for="deliveryAddress"><strong>Delivery Address</strong></label>
+              <textarea
+                id="deliveryAddress"
+                v-model.trim="deliveryAddress"
+                rows="3"
+                placeholder="Enter your delivery address"
+              ></textarea>
+            </div>
+            <div class="summary-line">
+              <span>Subtotal:</span>
+              <span>R{{ Number(cart.subtotal || 0).toFixed(2) }}</span>
+            </div>
+            <div class="summary-line">
+              <span>Delivery Fee:</span>
+              <span>R{{ Number(cart.delivery_fee || 25.00).toFixed(2) }}</span>
+            </div>
+            <div class="summary-total">
+              <strong>Total: R{{ calculateTotal().toFixed(2) }}</strong>
+            </div>
+          </div>
+        </div>
+        
+        <div v-if="success" class="success">{{ success }}</div>
+        <div v-if="error" class="error">{{ error }}</div>
 
-      <button v-if="cart.items && cart.items.length > 0 && !success" @click="completeOrder" :disabled="loading">
-        {{ loading ? "Processing..." : `Complete Order - R${calculateTotal().toFixed(2)}` }}
-      </button>
+        <button v-if="cart.items && cart.items.length > 0 && !success" @click="completeOrder" :disabled="loading">
+          {{ loading ? "Processing..." : `Complete Order - R${calculateTotal().toFixed(2)}` }}
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -62,13 +86,49 @@ export default {
       success: null,
       error: null,
       cart: { items: [], subtotal: 0, delivery_fee: 25.00, total: 0 },
-      deliveryAddress: ''
+      deliveryAddress: '',
+      paymentStatus: null,
+      orderId: null,
+      countdown: 5
     };
   },
   async created() {
-    await Promise.all([this.fetchCart(), this.fetchProfileAddress()]);
+    // Check if this is a return from PayFast
+    const orderIdParam = this.$route.query.order_id;
+    const paymentStatusParam = this.$route.query.payment_status;
+    const cancelParam = this.$route.query.cancel;
+    
+    if (orderIdParam && paymentStatusParam === 'COMPLETE') {
+      // Payment successful
+      this.paymentStatus = 'success';
+      this.orderId = orderIdParam;
+      localStorage.removeItem('cart'); // Clear cart
+      this.startCountdown();
+    } else if (cancelParam || this.$route.query.cancel === 'true') {
+      // Payment cancelled
+      this.paymentStatus = 'cancel';
+      this.startCountdown();
+    } else {
+      // Normal checkout flow
+      await Promise.all([this.fetchCart(), this.fetchProfileAddress()]);
+    }
   },
   methods: {
+    startCountdown() {
+      const interval = setInterval(() => {
+        if (this.countdown <= 1) {
+          clearInterval(interval);
+          if (this.paymentStatus === 'success') {
+            this.$router.push('/customer/home');
+          } else if (this.paymentStatus === 'cancel') {
+            this.$router.push('/cart');
+          }
+        } else {
+          this.countdown--;
+        }
+      }, 1000);
+    },
+    
     submitPayFastForm(url, fields) {
       const form = document.createElement('form');
       form.method = 'POST';
@@ -89,7 +149,8 @@ export default {
     async fetchCart() {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:5401/api/cart', {
+        const API_URL = import.meta.env.VITE_API_URL || 'https://townships-eats-backend.onrender.com/api';
+        const response = await axios.get(`${API_URL}/cart`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         
@@ -109,7 +170,8 @@ export default {
         const token = localStorage.getItem('token');
         if (!token) return;
 
-        const response = await axios.get('http://localhost:5401/api/auth/me', {
+        const API_URL = import.meta.env.VITE_API_URL || 'https://townships-eats-backend.onrender.com/api';
+        const response = await axios.get(`${API_URL}/auth/me`, {
           headers: { Authorization: `Bearer ${token}` }
         });
 
@@ -163,7 +225,9 @@ export default {
           return;
         }
 
-        const orderResponse = await axios.post('http://localhost:5401/api/orders', {
+        const API_URL = import.meta.env.VITE_API_URL || 'https://townships-eats-backend.onrender.com/api';
+        
+        const orderResponse = await axios.post(`${API_URL}/orders`, {
           delivery_address: this.deliveryAddress
         }, {
           headers: { Authorization: `Bearer ${token}` }
@@ -178,7 +242,7 @@ export default {
         const [firstName, ...restName] = String(user.username || 'Customer').trim().split(' ');
         const lastName = restName.join(' ');
 
-        const payfastResponse = await axios.post('http://localhost:5401/api/payfast/pay', {
+        const payfastResponse = await axios.post(`${API_URL}/payfast/pay`, {
           first_name: firstName || 'Customer',
           last_name: lastName || '',
           email: user.email,
@@ -319,5 +383,50 @@ button:disabled {
 .text-center {
   text-align: center;
 }
-</style>
 
+/* Success/Cancel Pages */
+.success-page, .cancel-page {
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.success-card, .cancel-card {
+  text-align: center;
+  padding: 40px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+}
+
+.success-icon, .cancel-icon {
+  font-size: 64px;
+  margin-bottom: 20px;
+}
+
+.success-card h2 {
+  color: #4caf50;
+  margin-bottom: 15px;
+}
+
+.cancel-card h2 {
+  color: #f44336;
+  margin-bottom: 15px;
+}
+
+.btn-primary {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 12px 24px;
+  background-color: #4caf50;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+.btn-primary:hover {
+  background-color: #45a049;
+}
+</style>
