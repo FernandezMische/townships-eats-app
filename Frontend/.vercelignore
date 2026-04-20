@@ -1,0 +1,21 @@
+# In your terminal
+cd ~/Desktop/TownshipsEats-App
+
+# Create .vercelignore in Frontend folder
+cat > Frontend/.vercelignore << 'EOF'
+# Ignore backend completely
+../Backend/
+Backend/
+../Backend/**
+Backend/**
+
+# Ignore root files
+../.git/
+../README.md
+../package.json
+EOF
+
+# Add and commit
+git add Frontend/.vercelignore
+git commit -m "Add .vercelignore to ignore Backend folder"
+git push origin master
