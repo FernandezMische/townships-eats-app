@@ -55,16 +55,27 @@ name: 'Payment',
 component: payment,
     },
     // Add these to your routes array
-{
-  path: '/payment/success',
-  name: 'PaymentSuccess',
-  component: () => import('@/views/PaymentSuccess.vue')
-},
-{
-  path: '/payment/cancel',
-  name: 'PaymentCancel', 
-  component: () => import('@/views/PaymentCancel.vue')
-}
+// Add this before your other routes
+const routes = [
+  // Payment redirect handler (catch both /payment/success and /payment/cancel)
+  {
+    path: '/payment/success',
+    name: 'PaymentSuccess',
+    beforeEnter: (to, from, next) => {
+      // Redirect to payment page with success parameter
+      next({ path: '/payment', query: { order_id: to.query.order_id } });
+    }
+  },
+  {
+    path: '/payment/cancel',
+    name: 'PaymentCancel',
+    beforeEnter: (to, from, next) => {
+      // Redirect to payment page with cancel parameter
+      next({ path: '/payment', query: { cancel: 'true' } });
+    }
+  },
+  // ... your existing routes
+];
     {
       path: '/customer',
       redirect: '/customer/home',
