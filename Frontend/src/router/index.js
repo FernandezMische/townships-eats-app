@@ -8,7 +8,7 @@ import RegistrationPage from '../views/Auth/RegistrationPage.vue';
 // --- Customer Pages ---
 import CustomerHomePage from '../views/Customer/CustomerHomePage.vue';
 import CategoryPage from '../views/Customer/CategoryPage.vue';
-import CategoryDishesPage from '../views/Customer/CategoryDishesPage.vue'; // NEW
+import CategoryDishesPage from '../views/Customer/CategoryDishesPage.vue';
 import CustomerProfilePage from '../views/Customer/CustomerProfilePage.vue';
 import FavoritesPage from '../views/Customer/FavoritesPage.vue';
 import SearchResultsPage from '../views/Customer/SearchResultsPage.vue';
@@ -18,15 +18,16 @@ import OrderTrackingPage from '../views/Customer/OrderTrackingPage.vue';
 
 // --- Vendor Pages ---
 import VendorDashboardPage from '../views/Vendor/VendorDashboardPage.vue';
-import VendorOrdersPage from '../views/Vendor/VendorOrdersPage.vue'; // NEW
+import VendorOrdersPage from '../views/Vendor/VendorOrdersPage.vue';
 import MenuManagementPage from '../views/Vendor/MenuManagementPage.vue';
-import DishFormPage from '../views/Vendor/DishFormPage.vue'; // NEW
-import VendorReportsPage from '../views/Vendor/VendorReportsPage.vue'; // NEW
+import DishFormPage from '../views/Vendor/DishFormPage.vue';
+import VendorReportsPage from '../views/Vendor/VendorReportsPage.vue';
 import VendorEarningsPage from '../views/Vendor/VendorEarningsPage.vue';
 
 // --- Driver Pages ---
 import DriverDashboardPage from '../views/Driver/DriverDashboardPage.vue';
-import payment from  '../views/payment.vue';
+import payment from '../views/payment.vue';
+
 // --- Static Pages ---
 import AboutUsPage from '../views/Static/AboutUsPage.vue';
 import ContactPage from '../views/Static/ContactPage.vue';
@@ -36,7 +37,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      redirect: '/login', // Default redirect
+      redirect: '/login',
     },
     {
       path: '/login',
@@ -48,34 +49,27 @@ const router = createRouter({
       name: 'Register',
       component: RegistrationPage,
     },
-    // --- Customer Routes ---
+    // --- Payment Routes ---
     {
-path: '/payment',
-name: 'Payment',
-component: payment,
+      path: '/payment',
+      name: 'Payment',
+      component: payment,
     },
-    // Add these to your routes array
-// Add this before your other routes
-const routes = [
-  // Payment redirect handler (catch both /payment/success and /payment/cancel)
-  {
-    path: '/payment/success',
-    name: 'PaymentSuccess',
-    beforeEnter: (to, from, next) => {
-      // Redirect to payment page with success parameter
-      next({ path: '/payment', query: { order_id: to.query.order_id } });
-    }
-  },
-  {
-    path: '/payment/cancel',
-    name: 'PaymentCancel',
-    beforeEnter: (to, from, next) => {
-      // Redirect to payment page with cancel parameter
-      next({ path: '/payment', query: { cancel: 'true' } });
-    }
-  },
-  // ... your existing routes
-];
+    {
+      path: '/payment/success',
+      name: 'PaymentSuccess',
+      beforeEnter: (to, from, next) => {
+        next({ path: '/payment', query: { order_id: to.query.order_id, payment_status: to.query.payment_status } });
+      }
+    },
+    {
+      path: '/payment/cancel',
+      name: 'PaymentCancel',
+      beforeEnter: (to, from, next) => {
+        next({ path: '/payment', query: { cancel: 'true' } });
+      }
+    },
+    // --- Customer Routes ---
     {
       path: '/customer',
       redirect: '/customer/home',
@@ -91,7 +85,7 @@ const routes = [
           component: CategoryPage,
         },
         {
-          path: 'categories/:id/dishes', // NEW: Dishes within a specific category
+          path: 'categories/:id/dishes',
           name: 'CategoryDishes',
           component: CategoryDishesPage,
           props: true,
@@ -141,7 +135,7 @@ const routes = [
           component: VendorDashboardPage,
         },
         {
-          path: 'orders', // NEW
+          path: 'orders',
           name: 'VendorOrders',
           component: VendorOrdersPage,
         },
@@ -151,18 +145,18 @@ const routes = [
           component: MenuManagementPage,
         },
         {
-          path: 'menu-management/add-dish', // NEW: Add a new dish
+          path: 'menu-management/add-dish',
           name: 'AddDish',
           component: DishFormPage,
         },
         {
-          path: 'menu-management/edit-dish/:id', // NEW: Edit an existing dish
+          path: 'menu-management/edit-dish/:id',
           name: 'EditDish',
           component: DishFormPage,
           props: true,
         },
         {
-          path: 'reports', // NEW
+          path: 'reports',
           name: 'VendorReports',
           component: VendorReportsPage,
         },
@@ -199,7 +193,7 @@ const routes = [
     // Fallback for any unmatched routes
     {
       path: '/:catchAll(.*)',
-      redirect: '/login', // Or a 404 page
+      redirect: '/login',
     }
   ],
 });
