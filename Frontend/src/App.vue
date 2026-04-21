@@ -1,4 +1,4 @@
-<!-- Frontend/src/App.vue -->
+// Replace the entire App.vue with this:
 <template>
   <div id="app-wrapper">
     <AppHeader :userRole="userRole" @logout="logout" />
@@ -12,32 +12,60 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
-import { RouterView, useRouter } from 'vue-router';
-import AppHeader from './components/Shared/AppHeader.vue'; // Import the new AppHeader component
-import AppFooter from './components/Shared/AppFooter.vue'; // Import the new AppFooter component
+import { ref, watch, onMounted } from 'vue';
+import { RouterView, useRouter, useRoute } from 'vue-router';
+import AppHeader from './components/Shared/AppHeader.vue';
+import AppFooter from './components/Shared/AppFooter.vue';
 
 const router = useRouter();
+const route = useRoute();
 
-// This ref will simulate the user's role. In a real app, this would come from an auth store.
-const userRole = ref(localStorage.getItem('userRole') || null); // 'customer', 'vendor', 'driver', or null
+// Get user role from token or localStorage
+const getUserRole = () => {
+  // First check if we have a token
+  const token = localStorage.getItem('token');
+  if (!token) return null;
+  
+  // Try to get role from localStorage
+  let role = localStorage.getItem('userRole');
+  if (!role) {
+    // Try to decode role from token if possible
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      role = payload.role || 'customer';
+      localStorage.setItem('userRole', role);
+    } catch (e) {
+      role = 'customer';
+    }
+  }
+  return role;
+};
 
-// Watch for changes in the route to update active links if needed (though RouterLink handles most of it)
+const userRole = ref(getUserRole());
+
+// Watch for route changes to update userRole if needed
 watch(router.currentRoute, (newRoute) => {
-  // We can add logic here if we need to react to route changes for general app state
+  // Don't redirect in App.vue - let components handle their own auth
   console.log('Current route:', newRoute.fullPath);
 });
 
+// Also check on mount
+onMounted(() => {
+  userRole.value = getUserRole();
+});
+
 const logout = () => {
-  userRole.value = null; // Clear role
-  localStorage.removeItem('userRole'); // Clear from local storage
-  router.push('/login'); // Redirect to login page
+  userRole.value = null;
+  localStorage.removeItem('userRole');
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+  router.push('/login');
 };
 
-// We'll add a temporary global login function for testing
+// Global login function for testing
 window.loginAs = (role) => {
   userRole.value = role;
-  localStorage.setItem('userRole', role); // Store role for persistence across reloads
+  localStorage.setItem('userRole', role);
   if (role === 'customer') {
     router.push('/customer/home');
   } else if (role === 'vendor') {
@@ -61,10 +89,8 @@ window.loginAs = (role) => {
   flex-direction: column;
 }
 
-
 .app-content {
   flex-grow: 1;
   padding: 0 20px;
 }
-
 </style>
