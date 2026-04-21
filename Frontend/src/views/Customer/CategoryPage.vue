@@ -28,17 +28,17 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 const categories = ref([
-  { id: 1, name: 'Shisanyama', image: 'https://loremflickr.com/400/300/braai,meat?lock=1' },
-  { id: 2, name: 'Kotas', image: 'https://loremflickr.com/400/300/sandwich,sub?lock=2' },
-  { id: 3, name: 'Mogodu', image: 'https://loremflickr.com/400/300/stew,curry?lock=3' },
-  { id: 4, name: 'Street Food', image: 'https://loremflickr.com/400/300/streetfood,fried?lock=4' },
-  { id: 5, name: 'Burgers', image: 'https://loremflickr.com/400/300/burger,gourmet?lock=5' },
-  { id: 6, name: 'Pizza', image: 'https://loremflickr.com/400/300/pizza,sourdough?lock=6' },
-  { id: 7, name: 'Chicken', image: 'https://loremflickr.com/400/300/roastedchicken?lock=7' },
-  { id: 8, name: 'Bakery', image: 'https://loremflickr.com/400/300/bakery,pastry?lock=8' },
-  { id: 9, name: 'Drinks', image: 'https://loremflickr.com/400/300/drink,cocktail?lock=9' },
-  { id: 10, name: 'Desserts', image: 'https://loremflickr.com/400/300/dessert,cake?lock=10' },
-  { id: 11, name: 'Vegetarian', image: 'https://loremflickr.com/400/300/salad,bowl?lock=11' },
+  { id: 1, name: 'Shisanyama', image: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400https://loremflickr.com/400/300/braai,meat?lock=1h=300https://loremflickr.com/400/300/braai,meat?lock=1fit=crop' },
+  { id: 2, name: 'Kotas', image: 'https://images.unsplash.com/photo-1561758033-d89a9ad46330?w=400https://loremflickr.com/400/300/sandwich,sub?lock=2h=300https://loremflickr.com/400/300/sandwich,sub?lock=2fit=crop' },
+  { id: 3, name: 'Mogodu', image: 'https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=400https://loremflickr.com/400/300/stew,curry?lock=3h=300https://loremflickr.com/400/300/stew,curry?lock=3fit=crop' },
+  { id: 4, name: 'Street Food', image: 'https://images.unsplash.com/photo-1613194373608-7b5e4f56d61e?w=400https://loremflickr.com/400/300/streetfood,fried?lock=4h=300https://loremflickr.com/400/300/streetfood,fried?lock=4fit=crop' },
+  { id: 5, name: 'Burgers', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400https://loremflickr.com/400/300/burger,gourmet?lock=5h=300https://loremflickr.com/400/300/burger,gourmet?lock=5fit=crop' },
+  { id: 6, name: 'Pizza', image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400https://loremflickr.com/400/300/pizza,sourdough?lock=6h=300https://loremflickr.com/400/300/pizza,sourdough?lock=6fit=crop' },
+  { id: 7, name: 'Chicken', image: 'https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=400https://loremflickr.com/400/300/roastedchicken?lock=7h=300https://loremflickr.com/400/300/roastedchicken?lock=7fit=crop' },
+  { id: 8, name: 'Bakery', image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400https://loremflickr.com/400/300/bakery,pastry?lock=8h=300https://loremflickr.com/400/300/bakery,pastry?lock=8fit=crop' },
+  { id: 9, name: 'Drinks', image: 'https://images.unsplash.com/photo-1546171753-97d5c7b4a2a7?w=400https://loremflickr.com/400/300/drink,cocktail?lock=9h=300https://loremflickr.com/400/300/drink,cocktail?lock=9fit=crop' },
+  { id: 10, name: 'Desserts', image: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400https://loremflickr.com/400/300/dessert,cake?lock=10h=300https://loremflickr.com/400/300/dessert,cake?lock=10fit=crop' },
+  { id: 11, name: 'Vegetarian', image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400https://loremflickr.com/400/300/salad,bowl?lock=11' },h=300https://loremflickr.com/400/300/salad,bowl?lock=11' },fit=crop
 ]);
 
 const viewCategory = (categoryId) => {
