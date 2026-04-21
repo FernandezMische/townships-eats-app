@@ -407,3 +407,8 @@ html, body {
   width: 100%;
   overflow-x: hidden;
 }
+
+/* Prevent body scroll when mobile menu is open */
+body.menu-open {
+  overflow: hidden;
+}
