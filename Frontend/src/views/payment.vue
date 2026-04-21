@@ -80,6 +80,7 @@ import { RouterLink } from 'vue-router';
 
 export default {
   name: "PaymentPage",
+  components: { RouterLink },
   data() {
     return {
       loading: true,
@@ -92,61 +93,56 @@ export default {
       countdown: 5
     };
   },
-async created() {
+  async created() {
     const orderIdParam = this.$route.query.order_id;
     const paymentStatusParam = this.$route.query.payment_status;
     const cancelParam = this.$route.query.cancel;
     
     if (orderIdParam && paymentStatusParam === 'COMPLETE') {
-        // ✅ Payment successful - NO TOKEN CHECK NEEDED
-        // The order is already paid, just show success and redirect
-        this.paymentStatus = 'success';
-        this.orderId = orderIdParam;
-        localStorage.removeItem('cart');
-        this.startCountdown();
-        return;  // ← Exit here immediately
+      this.paymentStatus = 'success';
+      this.orderId = orderIdParam;
+      localStorage.removeItem('cart');
+      this.startCountdown();
+      return;
     } else if (cancelParam || this.$route.query.cancel === 'true') {
-        this.paymentStatus = 'cancel';
-        this.startCountdown();
-        return;
+      this.paymentStatus = 'cancel';
+      this.startCountdown();
+      return;
     } else {
-        // Normal checkout flow - only check token here
-        const token = localStorage.getItem('token');
-        if (!token) {
-            this.$router.push('/login');
-            return;
-        }
-        await Promise.all([this.fetchCart(), this.fetchProfileAddress()]);
+      const token = localStorage.getItem('token');
+      if (!token) {
+        this.$router.push('/login');
+        return;
+      }
+      await Promise.all([this.fetchCart(), this.fetchProfileAddress()]);
     }
-}
+  },
   methods: {
-  startCountdown() {
-    const interval = setInterval(() => {
+    startCountdown() {
+      const interval = setInterval(() => {
         if (this.countdown <= 1) {
-            clearInterval(interval);
-            if (this.paymentStatus === 'success') {
-                // CRITICAL: Set userRole before navigating
-                const token = localStorage.getItem('token');
-                if (token && !localStorage.getItem('userRole')) {
-                    try {
-                        const payload = JSON.parse(atob(token.split('.')[1]));
-                        const role = payload.role || 'customer';
-                        localStorage.setItem('userRole', role);
-                        console.log('✅ Set userRole to:', role);
-                    } catch (e) {
-                        localStorage.setItem('userRole', 'customer');
-                    }
-                }
-                this.$router.push('/customer/home');
-            } else if (this.paymentStatus === 'cancel') {
-                this.$router.push('/cart');
+          clearInterval(interval);
+          if (this.paymentStatus === 'success') {
+            const token = localStorage.getItem('token');
+            if (token && !localStorage.getItem('userRole')) {
+              try {
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                const role = payload.role || 'customer';
+                localStorage.setItem('userRole', role);
+                console.log('✅ Set userRole to:', role);
+              } catch (e) {
+                localStorage.setItem('userRole', 'customer');
+              }
             }
+            this.$router.push('/customer/home');
+          } else if (this.paymentStatus === 'cancel') {
+            this.$router.push('/cart');
+          }
         } else {
-            this.countdown--;
+          this.countdown--;
         }
-    }, 1000);
-}
-    
+      }, 1000);
+    },
     submitPayFastForm(url, fields) {
       const form = document.createElement('form');
       form.method = 'POST';
@@ -163,7 +159,6 @@ async created() {
       document.body.appendChild(form);
       form.submit();
     },
-
     async fetchCart() {
       try {
         const token = localStorage.getItem('token');
@@ -182,7 +177,6 @@ async created() {
         this.loading = false;
       }
     },
-
     async fetchProfileAddress() {
       try {
         const token = localStorage.getItem('token');
@@ -210,13 +204,11 @@ async created() {
         console.error('Error fetching profile address:', err);
       }
     },
-    
     calculateTotal() {
       const subtotal = Number(this.cart.subtotal || 0);
       const deliveryFee = Number(this.cart.delivery_fee || 25.00);
       return subtotal + deliveryFee;
     },
-    
     async completeOrder() {
       this.loading = true;
       this.error = null;
@@ -285,8 +277,8 @@ async created() {
           this.loading = false;
         }
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
