@@ -1,7 +1,10 @@
-// Replace the entire App.vue with this:
+cd ~/townships-eats-app
+
+cat > Frontend/src/App.vue << 'EOF'
 <template>
   <div id="app-wrapper">
-    <AppHeader :userRole="userRole" @logout="logout" />
+    <!-- Only show header if NOT on login or register page -->
+    <AppHeader v-if="!isAuthPage" :userRole="userRole" @logout="logout" />
 
     <main class="app-content">
       <RouterView />
@@ -12,7 +15,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch, onMounted, computed } from 'vue';
 import { RouterView, useRouter, useRoute } from 'vue-router';
 import AppHeader from './components/Shared/AppHeader.vue';
 import AppFooter from './components/Shared/AppFooter.vue';
@@ -20,16 +23,17 @@ import AppFooter from './components/Shared/AppFooter.vue';
 const router = useRouter();
 const route = useRoute();
 
-// Get user role from token or localStorage
+// Check if current page is login or register
+const isAuthPage = computed(() => {
+  return route.path === '/login' || route.path === '/register';
+});
+
 const getUserRole = () => {
-  // First check if we have a token
   const token = localStorage.getItem('token');
   if (!token) return null;
   
-  // Try to get role from localStorage
   let role = localStorage.getItem('userRole');
   if (!role) {
-    // Try to decode role from token if possible
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
       role = payload.role || 'customer';
@@ -43,15 +47,6 @@ const getUserRole = () => {
 
 const userRole = ref(getUserRole());
 
-// Watch for route changes to update userRole if needed
-watch(router.currentRoute, (newRoute) => {
-  // Don't redirect in App.vue - let components handle their own auth
-  console.log('Current route:', newRoute.fullPath);
-});
-console.log('🔍 App.vue - userRole:', userRole.value);
-console.log('🔍 App.vue - token:', localStorage.getItem('token'));
-console.log('🔍 App.vue - current path:', window.location.hash);
-// Also check on mount
 onMounted(() => {
   userRole.value = getUserRole();
 });
@@ -96,3 +91,4 @@ window.loginAs = (role) => {
   padding: 0 20px;
 }
 </style>
+EOF
