@@ -48,7 +48,9 @@ watch(router.currentRoute, (newRoute) => {
   // Don't redirect in App.vue - let components handle their own auth
   console.log('Current route:', newRoute.fullPath);
 });
-
+console.log('🔍 App.vue - userRole:', userRole.value);
+console.log('🔍 App.vue - token:', localStorage.getItem('token'));
+console.log('🔍 App.vue - current path:', window.location.hash);
 // Also check on mount
 onMounted(() => {
   userRole.value = getUserRole();
