@@ -2,7 +2,7 @@
 <template>
   <div class="customer-home-page">
     <div class="page-card home-card">
-      <h2 class="text-center mb-20">Welcome to Kasi Eats!</h2>
+      <h2 class="text-center mb-20">Welcome to Townships Eats!</h2>
       <p class="text-center mb-20">Discover delicious food from local vendors.</p>
 
       <div class="section">

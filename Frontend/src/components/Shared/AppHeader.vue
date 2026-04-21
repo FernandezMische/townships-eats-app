@@ -4,8 +4,8 @@
     <div class="header-content">
       <!-- Logo Section -->
       <RouterLink to="/" class="logo-link">
-        <img src="https://cdn-icons-png.flaticon.com/512/1046/1046784.png" alt="Kasi Eats Logo" class="app-logo">
-        <h2 style="color: var(--color-primary-orange); margin: 0;">Kasi Eats</h2>
+        <img src="https://cdn-icons-png.flaticon.com/512/1046/1046784.png" alt="Townships Eats Logo" class="app-logo">
+        <h2 style="color: var(--color-primary-orange); margin: 0;">Townships Eats</h2>
       </RouterLink>
 
       <!-- Hamburger Menu Button (Mobile Only) -->

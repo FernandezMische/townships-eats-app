@@ -258,7 +258,7 @@ export default {
           email: user.email,
           amount: orderTotal,
           item_name: `Order #${orderId}`,
-          item_description: `Kasi Eats order ${orderId}`,
+          item_description: `Townships Eats order ${orderId}`,
           order_id: orderId
         });
 
