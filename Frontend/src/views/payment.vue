@@ -95,25 +95,29 @@ export default {
 async created() {
     const orderIdParam = this.$route.query.order_id;
     const paymentStatusParam = this.$route.query.payment_status;
+    const cancelParam = this.$route.query.cancel;
     
     if (orderIdParam && paymentStatusParam === 'COMPLETE') {
-        // Ensure token is still valid or refresh it
-        const token = localStorage.getItem('token');
-        if (!token) {
-            // Try to get token from session or redirect to login with return URL
-            console.warn('No token found on payment success');
-            // You might want to redirect to login but preserve order_id
-            this.$router.push(`/login?redirect=payment&order_id=${orderIdParam}`);
-            return;
-        }
-        
+        // ✅ Payment successful - NO TOKEN CHECK NEEDED
+        // The order is already paid, just show success and redirect
         this.paymentStatus = 'success';
         this.orderId = orderIdParam;
         localStorage.removeItem('cart');
         this.startCountdown();
+        return;  // ← Exit here immediately
+    } else if (cancelParam || this.$route.query.cancel === 'true') {
+        this.paymentStatus = 'cancel';
+        this.startCountdown();
         return;
+    } else {
+        // Normal checkout flow - only check token here
+        const token = localStorage.getItem('token');
+        if (!token) {
+            this.$router.push('/login');
+            return;
+        }
+        await Promise.all([this.fetchCart(), this.fetchProfileAddress()]);
     }
-    // ... rest of your code
 }
   methods: {
   startCountdown() {
