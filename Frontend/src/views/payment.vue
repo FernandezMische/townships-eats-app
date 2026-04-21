@@ -92,27 +92,29 @@ export default {
       countdown: 5
     };
   },
-  async created() {
-    // Check if this is a return from PayFast
+async created() {
     const orderIdParam = this.$route.query.order_id;
     const paymentStatusParam = this.$route.query.payment_status;
-    const cancelParam = this.$route.query.cancel;
     
     if (orderIdParam && paymentStatusParam === 'COMPLETE') {
-      // Payment successful
-      this.paymentStatus = 'success';
-      this.orderId = orderIdParam;
-      localStorage.removeItem('cart'); // Clear cart
-      this.startCountdown();
-    } else if (cancelParam || this.$route.query.cancel === 'true') {
-      // Payment cancelled
-      this.paymentStatus = 'cancel';
-      this.startCountdown();
-    } else {
-      // Normal checkout flow
-      await Promise.all([this.fetchCart(), this.fetchProfileAddress()]);
+        // Ensure token is still valid or refresh it
+        const token = localStorage.getItem('token');
+        if (!token) {
+            // Try to get token from session or redirect to login with return URL
+            console.warn('No token found on payment success');
+            // You might want to redirect to login but preserve order_id
+            this.$router.push(`/login?redirect=payment&order_id=${orderIdParam}`);
+            return;
+        }
+        
+        this.paymentStatus = 'success';
+        this.orderId = orderIdParam;
+        localStorage.removeItem('cart');
+        this.startCountdown();
+        return;
     }
-  },
+    // ... rest of your code
+}
   methods: {
   startCountdown() {
     const interval = setInterval(() => {
