@@ -34,7 +34,7 @@ app.use("/api/driver", driverRoutes);
 
 // Basic route
 app.get("/", (req, res) => {
-  res.json({ message: "Kasi Eats API is running" });
+  res.json({ message: "Townships Eats API is running" });
 });
 
 const PORT = process.env.PORT || 5401;
