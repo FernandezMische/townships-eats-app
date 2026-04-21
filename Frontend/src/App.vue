@@ -12,7 +12,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+
+import { ref, watch, onMounted, computed } from 'vue';
+
+import { ref, watch, onMounted, computed } from 'vue';
+
 import { RouterView, useRouter, useRoute } from 'vue-router';
 import AppHeader from './components/Shared/AppHeader.vue';
 import AppFooter from './components/Shared/AppFooter.vue';
