@@ -114,20 +114,32 @@ export default {
     }
   },
   methods: {
-    startCountdown() {
-      const interval = setInterval(() => {
+  startCountdown() {
+    const interval = setInterval(() => {
         if (this.countdown <= 1) {
-          clearInterval(interval);
-          if (this.paymentStatus === 'success') {
-            this.$router.push('/customer/home');
-          } else if (this.paymentStatus === 'cancel') {
-            this.$router.push('/cart');
-          }
+            clearInterval(interval);
+            if (this.paymentStatus === 'success') {
+                // CRITICAL: Set userRole before navigating
+                const token = localStorage.getItem('token');
+                if (token && !localStorage.getItem('userRole')) {
+                    try {
+                        const payload = JSON.parse(atob(token.split('.')[1]));
+                        const role = payload.role || 'customer';
+                        localStorage.setItem('userRole', role);
+                        console.log('✅ Set userRole to:', role);
+                    } catch (e) {
+                        localStorage.setItem('userRole', 'customer');
+                    }
+                }
+                this.$router.push('/customer/home');
+            } else if (this.paymentStatus === 'cancel') {
+                this.$router.push('/cart');
+            }
         } else {
-          this.countdown--;
+            this.countdown--;
         }
-      }, 1000);
-    },
+    }, 1000);
+}
     
     submitPayFastForm(url, fields) {
       const form = document.createElement('form');
